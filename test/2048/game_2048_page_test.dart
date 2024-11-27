@@ -1,19 +1,19 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
-import 'package:brain_games/views/2048_page.dart';
+import 'package:brain_games/views/game_2048_page.dart';
 
 void main() {
   testWidgets('GamePage renders correctly', (WidgetTester tester) async {
-    await tester.pumpWidget(const MaterialApp(home: GamePage()));
+    await tester.pumpWidget(const MaterialApp(home: Game2048Page()));
 
     expect(find.text('2048'), findsOneWidget);
     expect(find.byType(Container), findsWidgets);
   });
 
   testWidgets('Swipe left triggers move', (WidgetTester tester) async {
-    await tester.pumpWidget(const MaterialApp(home: GamePage()));
+    await tester.pumpWidget(const MaterialApp(home: Game2048Page()));
 
-    final state = tester.state(find.byType(GamePage)) as GamePageState;
+    final state = tester.state(find.byType(Game2048Page)) as GamePageState;
     state.game.grid = [
       [2, 2, 0, 0],
       [0, 0, 0, 0],
@@ -41,9 +41,9 @@ void main() {
   });
 
   testWidgets('Swipe up triggers move', (WidgetTester tester) async {
-    await tester.pumpWidget(const MaterialApp(home: GamePage()));
+    await tester.pumpWidget(const MaterialApp(home: Game2048Page()));
 
-    final state = tester.state(find.byType(GamePage)) as GamePageState;
+    final state = tester.state(find.byType(Game2048Page)) as GamePageState;
     state.game.grid = [
       [2, 0, 0, 0],
       [2, 0, 0, 0],

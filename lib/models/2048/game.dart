@@ -141,7 +141,7 @@ class Game2048 {
   bool isGameWon() {
     for (int r = 0; r < gridSize; r++) {
       for (int c = 0; c < gridSize; c++) {
-        if (_grid[r][c] == 2048) return true;
+        if (_grid[r][c] == 128) return true;
       }
     }
     return false;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '2048_page.dart';
+import 'game_2048_page.dart';
 import 'memory_match_page.dart';
+import 'stats_page.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({super.key});
@@ -13,12 +14,21 @@ class MainPage extends StatelessWidget {
       ),
       body: ListView(
         children: [
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const StatsPage()),
+              );
+            },
+            child: const Text('View Stats'),
+          ),
           ListTile(
             title: const Text('2048'),
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const GamePage()),
+                MaterialPageRoute(builder: (context) => const Game2048Page()),
               );
             },
           ),
