@@ -58,10 +58,10 @@ class Game2048PageState extends State<Game2048Page> {
 
   Future<dynamic> refreshPage(BuildContext context) {
     return Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (context) => const Game2048Page(),
-            ),
-          );
+      MaterialPageRoute(
+        builder: (context) => const Game2048Page(),
+      ),
+    );
   }
 
   Column game2048Body() {
@@ -159,7 +159,7 @@ class Game2048PageState extends State<Game2048Page> {
     return AlertDialog(
       title: const Text("You won!!"),
       content: const Text("2048 is achieved!"),
-      actions: restartAction(context),
+      actions: playAgainAction(context),
     );
   }
 
@@ -174,8 +174,20 @@ class Game2048PageState extends State<Game2048Page> {
     return AlertDialog(
       title: const Text("Game Over"),
       content: const Text("No more moves available!"),
-      actions: restartAction(context),
+      actions: playAgainAction(context),
     );
+  }
+
+  List<Widget> playAgainAction(BuildContext context) {
+    return [
+      IconButton(
+        icon: const Icon(Icons.refresh),
+        onPressed: () {
+          Navigator.of(context).pop();
+          refreshPage(context);
+        },
+      ),
+    ];
   }
 
   Widget _buildGameBoard() {
