@@ -2,29 +2,29 @@ import 'package:flutter/material.dart';
 
 import 'package:brain_games/views/stats/game_2048_stats_page.dart';
 
-class StatsPage extends StatelessWidget {
-  const StatsPage({super.key});
+class StatsMainPage extends StatelessWidget {
+  const StatsMainPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return statsPageBuilder(context);
+    return statsMainPageBuilder(context);
   }
 
-  Scaffold statsPageBuilder(BuildContext context) {
+  Scaffold statsMainPageBuilder(BuildContext context) {
     return Scaffold(
-    appBar: statsPageAppBar(),
-    body: statsPageBody(context),
+    appBar: statsMainPageAppBar(),
+    body: statsMainPageBody(context),
   );
   }
 
-  AppBar statsPageAppBar() {
+  AppBar statsMainPageAppBar() {
     return AppBar(
       title: const Text('Stats'),
       centerTitle: true,
       );
   }
 
-  ListView statsPageBody(BuildContext context) {
+  ListView statsMainPageBody(BuildContext context) {
     return ListView(
     children: [
       game2048StatsTile(context),

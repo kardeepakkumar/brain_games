@@ -2,63 +2,133 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:brain_games/models/2048/game.dart';
 
 void main() {
-  group('Game2048', () {
+
+  group('Game2048 initialisation: ', () {
     test('Initial grid is empty except for two cells', () {
       final game = Game2048(gridSize: 4);
-
       int nonZeroCount = game.grid.fold(
         0,
         (sum, row) => sum + row.where((cell) => cell != 0).length,
       );
-
       expect(nonZeroCount, 2);
     });
+  });
 
-    test('Move merges tiles correctly', () {
+  group('Game2048 moves: ', () {
+    test('Move left merges tiles correctly', () {
       final game = Game2048(gridSize: 4);
-
       game.grid = [
         [2, 2, 0, 0],
         [0, 0, 0, 0],
         [0, 0, 0, 0],
         [0, 0, 0, 0],
       ];
-
       game.move('left');
-
-      expect(game.grid[0][0], 4);
       int nonZeroCount = game.grid.fold(
         0,
         (sum, row) => sum + row.where((cell) => cell != 0).length,
       );
-
+      expect(game.grid[0][0], 4);
       expect(nonZeroCount, 2);
     });
 
-    test('Game detects game over correctly', () {
+    test('Move right merges tiles correctly', () {
       final game = Game2048(gridSize: 4);
+      game.grid = [
+        [2, 2, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+      ];
+      game.move('right');
+      int nonZeroCount = game.grid.fold(
+        0,
+        (sum, row) => sum + row.where((cell) => cell != 0).length,
+      );
+      expect(game.grid[0][3], 4);
+      expect(nonZeroCount, 2);
+    });
 
+    test('Move up merges tiles correctly', () {
+      final game = Game2048(gridSize: 4);
+      game.grid = [
+        [2, 0, 0, 0],
+        [2, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+      ];
+      game.move('up');
+      int nonZeroCount = game.grid.fold(
+        0,
+        (sum, row) => sum + row.where((cell) => cell != 0).length,
+      );
+      expect(game.grid[0][0], 4);
+      expect(nonZeroCount, 2);
+    });
+
+    test('Move down merges tiles correctly', () {
+      final game = Game2048(gridSize: 4);
+      game.grid = [
+        [2, 0, 0, 0],
+        [2, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+      ];
+      game.move('down');
+      int nonZeroCount = game.grid.fold(
+        0,
+        (sum, row) => sum + row.where((cell) => cell != 0).length,
+      );
+      expect(game.grid[3][0], 4);
+      expect(nonZeroCount, 2);
+    });
+
+  });
+
+  group('Game2048 states: ', () {
+
+    test('Game detects game over correctly case A', () {
+      final game = Game2048(gridSize: 4);
       game.grid = [
         [2, 4, 8, 16],
         [16, 8, 4, 2],
         [2, 4, 8, 16],
         [16, 8, 4, 2],
       ];
-
       expect(game.isGameOver(), true);
     });
 
-    test('Game detects game won correctly', () {
+    test('Game detects game over correctly case B', () {
       final game = Game2048(gridSize: 4);
+      game.grid = [
+        [4, 4, 8, 16],
+        [16, 8, 4, 2],
+        [2, 4, 8, 16],
+        [16, 8, 4, 2],
+      ];
+      expect(game.isGameOver(), false);
+    });
 
+    test('Game detects game won correctly case A', () {
+      final game = Game2048(gridSize: 4);
       game.grid = [
         [2, 4, 8, 16],
         [16, 128, 4, 2],
-        [2, 4, 8, 2048],
+        [32, 4, 8, 2048],
         [16, 8, 4, 2],
       ];
+      expect(game.isGameWon(), true);
+    });
 
-      expect(game.isGameOver(), true);
+    test('Game detects game won correctly case B', () {
+      final game = Game2048(gridSize: 4);
+      game.grid = [
+        [4, 4, 8, 16],
+        [16, 8, 4, 2],
+        [2, 4, 8, 16],
+        [16, 8, 4, 2],
+      ];
+      expect(game.isGameWon(), false);
     });
   });
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'games/game_2048_page.dart';
 import 'games/game_memory_match_page.dart';
-import 'stats/stats_page.dart';
+import 'stats/stats_main_page.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({super.key});
@@ -42,7 +42,7 @@ class MainPage extends StatelessWidget {
       onPressed: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const StatsPage()),
+          MaterialPageRoute(builder: (context) => const StatsMainPage()),
         );
       },
     );
