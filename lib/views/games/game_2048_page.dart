@@ -189,7 +189,7 @@ class Game2048PageState extends State<Game2048Page> {
       itemBuilder: (context, index) {
         int row = index ~/ _game.gridSize;
         int col = index % _game.gridSize;
-        return GameTile(value: _game.grid[row][col]);
+        return Game2048Tile(value: _game.grid[row][col]);
       },
     );
   }

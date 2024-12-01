@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'games/game_2048_page.dart';
-import 'games/memory_match_page.dart';
+import 'games/game_memory_match_page.dart';
 import 'stats/stats_page.dart';
 
 class MainPage extends StatelessWidget {
@@ -30,8 +30,8 @@ class MainPage extends StatelessWidget {
     return ListView(
     children: [
       viewStatsPageButton(context),
-      game2048Tile(context),
-      gameMemoryMatchTile(context),
+      gameListTile(context, '2048', const Game2048Page()),
+      gameListTile(context, 'Memory Match', const GameMemoryMatchPage()),
     ],
   );
   }
@@ -48,24 +48,12 @@ class MainPage extends StatelessWidget {
     );
   }
 
-  ListTile game2048Tile(BuildContext context) {
+  ListTile gameListTile(BuildContext context, String text, Widget page) {
     return ListTile(
-      title: const Text('2048'),
+      title: Text(text),
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const Game2048Page()),
-        );
-      },
-    );
-  }
-  ListTile gameMemoryMatchTile(BuildContext context) {
-    return ListTile(
-      title: const Text('Memory Match'),
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const MemoryMatchPage()),
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => page),
         );
       },
     );

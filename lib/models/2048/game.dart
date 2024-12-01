@@ -19,7 +19,6 @@ class Game2048 {
     }
   }
 
-
   void _initializeGrid() {
     _grid = List.generate(gridSize, (_) => List.filled(gridSize, 0));
     _addRandomTile();
@@ -65,6 +64,10 @@ class Game2048 {
     }
   }
 
+  List<List<int>> _cloneGrid(List<List<int>> grid) {
+    return grid.map<List<int>>((row) => List<int>.from(row)).toList();
+  }
+  
   void _moveUp() {
     for (int col = 0; col < gridSize; col++) {
       List<int> column = List.generate(gridSize, (row) => _grid[row][col]);
@@ -114,9 +117,6 @@ class Game2048 {
     return newLine;
   }
 
-  List<List<int>> _cloneGrid(List<List<int>> grid) {
-    return grid.map<List<int>>((row) => List<int>.from(row)).toList();
-  }
 
   bool _areGridsEqual(List<List<int>> grid1, List<List<int>> grid2) {
     for (int i = 0; i < gridSize; i++) {
@@ -141,7 +141,7 @@ class Game2048 {
   bool isGameWon() {
     for (int r = 0; r < gridSize; r++) {
       for (int c = 0; c < gridSize; c++) {
-        if (_grid[r][c] == 128) return true;
+        if (_grid[r][c] == 32) return true;
       }
     }
     return false;

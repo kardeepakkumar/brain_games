@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class MemoryMatchPage extends StatelessWidget {
-  const MemoryMatchPage({super.key});
+class GameMemoryMatchPage extends StatelessWidget {
+  const GameMemoryMatchPage({super.key});
 
   @override
   Widget build(BuildContext context) {

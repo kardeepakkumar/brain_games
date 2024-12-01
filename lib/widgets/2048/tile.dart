@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../utils/2048/colors.dart';
 
-class GameTile extends StatelessWidget {
+class Game2048Tile extends StatelessWidget {
+  
   final int value;
-
-  const GameTile({super.key, required this.value});
+  const Game2048Tile({super.key, required this.value});
 
   @override
   Widget build(BuildContext context) {
