@@ -3,12 +3,15 @@ import 'dart:math';
 class Game2048 {
   final int gridSize;
   late List<List<int>> _grid;
+  late bool _isActive;
 
   Game2048({this.gridSize = 4}) {
     _initializeGrid();
   }
 
   List<List<int>> get grid => _grid;
+
+  bool get isActive => _isActive;
 
   set grid(List<List<int>> newGrid) {
     if (newGrid.length == gridSize &&
@@ -20,6 +23,7 @@ class Game2048 {
   }
 
   void _initializeGrid() {
+    _isActive = true;
     _grid = List.generate(gridSize, (_) => List.filled(gridSize, 0));
     _addRandomTile();
     _addRandomTile();
@@ -43,7 +47,6 @@ class Game2048 {
 
   void move(String direction) {
     List<List<int>> oldGrid = _cloneGrid(_grid);
-
     switch (direction) {
       case 'up':
         _moveUp();
@@ -130,18 +133,26 @@ class Game2048 {
   bool isGameOver() {
     for (int r = 0; r < gridSize; r++) {
       for (int c = 0; c < gridSize; c++) {
-        if (_grid[r][c] == 0) return false;
-        if (r < gridSize - 1 && _grid[r][c] == _grid[r + 1][c]) return false;
-        if (c < gridSize - 1 && _grid[r][c] == _grid[r][c + 1]) return false;
+        if (isPlayableAt(r, c)) return false;
       }
     }
+    _isActive = false;
     return true;
+  }
+
+  bool isPlayableAt(int r, int c) {
+    return ((_grid[r][c] == 0) ||
+    (r < gridSize - 1 && _grid[r][c] == _grid[r + 1][c]) ||
+    (c < gridSize - 1 && _grid[r][c] == _grid[r][c + 1]));
   }
 
   bool isGameWon() {
     for (int r = 0; r < gridSize; r++) {
       for (int c = 0; c < gridSize; c++) {
-        if (_grid[r][c] == 32) return true;
+        if (_grid[r][c] == 32) {
+          _isActive = false;
+          return true;
+        }
       }
     }
     return false;

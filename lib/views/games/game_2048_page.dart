@@ -122,10 +122,12 @@ class Game2048PageState extends State<Game2048Page> {
   }
 
   void _handleSwipe(String direction) {
-    setState(() {
-      _game.move(direction);
-      _modifyGameStatus();
-    });
+    if (_game.isActive) {
+      setState(() {
+        _game.move(direction);
+        _modifyGameStatus();
+      });
+    }
   }
 
   void _modifyGameStatus() {
