@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
-import 'package:brain_games/views/game_2048_page.dart';
+import 'package:brain_games/views/games/game_2048_page.dart';
 
 void main() {
   testWidgets('GamePage renders correctly', (WidgetTester tester) async {
@@ -13,7 +13,7 @@ void main() {
   testWidgets('Swipe left triggers move', (WidgetTester tester) async {
     await tester.pumpWidget(const MaterialApp(home: Game2048Page()));
 
-    final state = tester.state(find.byType(Game2048Page)) as GamePageState;
+    final state = tester.state(find.byType(Game2048Page)) as Game2048PageState;
     state.game.grid = [
       [2, 2, 0, 0],
       [0, 0, 0, 0],
@@ -43,7 +43,7 @@ void main() {
   testWidgets('Swipe up triggers move', (WidgetTester tester) async {
     await tester.pumpWidget(const MaterialApp(home: Game2048Page()));
 
-    final state = tester.state(find.byType(Game2048Page)) as GamePageState;
+    final state = tester.state(find.byType(Game2048Page)) as Game2048PageState;
     state.game.grid = [
       [2, 0, 0, 0],
       [2, 0, 0, 0],

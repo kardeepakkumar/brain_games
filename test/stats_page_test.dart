@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_test/hive_test.dart';
 
-import 'package:brain_games/views/stats_page.dart';
+import 'package:brain_games/views/stats/stats_page.dart';
 
 void main() {
   setUp(() async {
