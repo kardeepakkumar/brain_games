@@ -11,6 +11,7 @@ void main() {
         (sum, row) => sum + row.where((cell) => cell != 0).length,
       );
       expect(nonZeroCount, 2);
+      expect((game.isGameWon() || game.isGameOver()) != game.isActive, true);
     });
   });
 
@@ -30,6 +31,7 @@ void main() {
       );
       expect(game.grid[0][0], 4);
       expect(nonZeroCount, 2);
+      expect((game.isGameWon() || game.isGameOver()) != game.isActive, true);
     });
 
     test('Move right merges tiles correctly', () {
@@ -47,6 +49,7 @@ void main() {
       );
       expect(game.grid[0][3], 4);
       expect(nonZeroCount, 2);
+      expect((game.isGameWon() || game.isGameOver()) != game.isActive, true);
     });
 
     test('Move up merges tiles correctly', () {
@@ -64,6 +67,7 @@ void main() {
       );
       expect(game.grid[0][0], 4);
       expect(nonZeroCount, 2);
+      expect((game.isGameWon() || game.isGameOver()) != game.isActive, true);
     });
 
     test('Move down merges tiles correctly', () {
@@ -81,6 +85,7 @@ void main() {
       );
       expect(game.grid[3][0], 4);
       expect(nonZeroCount, 2);
+      expect((game.isGameWon() || game.isGameOver()) != game.isActive, true);
     });
 
   });
@@ -96,6 +101,7 @@ void main() {
         [16, 8, 4, 2],
       ];
       expect(game.isGameOver(), true);
+      expect((game.isGameWon() || game.isGameOver()) != game.isActive, true);
     });
 
     test('Game detects game over correctly case B', () {
@@ -107,6 +113,7 @@ void main() {
         [16, 8, 4, 2],
       ];
       expect(game.isGameOver(), false);
+      expect((game.isGameWon() || game.isGameOver()) != game.isActive, true);
     });
 
     test('Game detects game won correctly case A', () {
@@ -118,6 +125,7 @@ void main() {
         [16, 8, 4, 2],
       ];
       expect(game.isGameWon(), true);
+      expect((game.isGameWon() || game.isGameOver()) != game.isActive, true);
     });
 
     test('Game detects game won correctly case B', () {
@@ -129,6 +137,7 @@ void main() {
         [16, 8, 4, 2],
       ];
       expect(game.isGameWon(), false);
+      expect((game.isGameWon() || game.isGameOver()) != game.isActive, true);
     });
   });
 }
