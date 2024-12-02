@@ -1,9 +1,10 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import '../../models/2048/game.dart';
 import '../../widgets/2048/tile.dart';
-import '../../../utils/game_timer.dart';
+import 'package:brain_games/utils/format_time.dart';
 
 
 class Game2048Page extends StatefulWidget {
@@ -15,18 +16,31 @@ class Game2048Page extends StatefulWidget {
 
 class Game2048PageState extends State<Game2048Page> {
   late Game2048 _game;
-  final GameTimer gameTimer = GameTimer();
+  int _elapsedSeconds = 0;
+  Timer? _timer;
 
   @override
   void initState() {
     super.initState();
     _game = Game2048(gridSize: 4);
-    gameTimer.startTimer();
+    _startTimer();
+  }
+  
+  void _startTimer() {
+    _timer?.cancel();
+    setState(() {
+      _elapsedSeconds = 0;
+    });
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        _elapsedSeconds++;
+      });
+    });
   }
 
   @override
   void dispose() {
-    gameTimer.stopTimer();
+    _timer?.cancel();
     super.dispose();
   }
 
@@ -57,6 +71,7 @@ class Game2048PageState extends State<Game2048Page> {
   }
 
   Future<dynamic> refreshPage(BuildContext context) {
+    _startTimer();
     return Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (context) => const Game2048Page(),
@@ -77,7 +92,8 @@ class Game2048PageState extends State<Game2048Page> {
     return Padding(
         padding: const EdgeInsets.all(8.0),
         child: Text(
-          'Time: ${gameTimer.formatTime()}',
+          key: const Key('timer_display'),
+          'Time: ${FormatDateTime.formatTime(_elapsedSeconds)}',
           style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         ),
       );
@@ -132,11 +148,12 @@ class Game2048PageState extends State<Game2048Page> {
 
   void _modifyGameStatus() {
     if (_game.isGameWon()) {
+      _timer?.cancel();
       addScore();
       _showGameWonDialog();
     }
     else if (_game.isGameOver()) {
-      gameTimer.stopTimer();
+      _timer?.cancel();
       _showGameOverDialog();
     }
   }
@@ -145,8 +162,8 @@ class Game2048PageState extends State<Game2048Page> {
     final statsBox = Hive.box('stats');
     statsBox.add({
       'game': '2048',
-      'time': gameTimer.formatTime(),
-      'date': gameTimer.formatDate(),
+      'time': FormatDateTime.formatTime(_elapsedSeconds),
+      'date': FormatDateTime.getToday(),
     });
   }
 

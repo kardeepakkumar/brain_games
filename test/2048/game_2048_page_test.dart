@@ -12,6 +12,23 @@ void main() {
     });
   });
 
+  group('Game2048Page timer works: ', () {
+    testWidgets('GamePage counts time correctly', (WidgetTester tester) async {
+      await tester.pumpWidget(const MaterialApp(home: Game2048Page()));
+      final timerDisplay = find.byKey(const Key('timer_display'));
+      var timerText = (tester.widget<Text>(timerDisplay)).data!;
+      expect(timerText, "Time: 00:00:00");
+      await tester.pump(const Duration(seconds: 2));
+      timerText = (tester.widget<Text>(timerDisplay)).data!;
+      expect(["Time: 00:00:01", "Time: 00:00:02"], contains(timerText));
+      final refreshButton = find.byIcon(Icons.refresh);
+      await tester.tap(refreshButton);
+      await tester.pumpAndSettle();
+      timerText = (tester.widget<Text>(timerDisplay)).data!;
+      expect(timerText, "Time: 00:00:00");
+    });
+  });
+
   group('Game2048Page refreshes: ', () {
     testWidgets('refresh button replaces the current Game2048Page with a new one', (WidgetTester tester) async {
       await tester.pumpWidget(const MaterialApp(home: Game2048Page()));
