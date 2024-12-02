@@ -12,6 +12,39 @@ void main() {
     });
   });
 
+  group('Game2048Page refreshes: ', () {
+    testWidgets('refresh button replaces the current Game2048Page with a new one', (WidgetTester tester) async {
+      await tester.pumpWidget(const MaterialApp(home: Game2048Page()));
+      final state = tester.state(find.byType(Game2048Page)) as Game2048PageState;
+      state.game.grid = [
+        [2, 2, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+      ];
+      await tester.pump();
+      await tester.fling(
+        find.byKey(const Key('swipe_detector')),
+        const Offset(-100, 0),
+        500
+      );
+
+      expect(find.byType(Game2048Page), findsOneWidget);
+
+      final refreshButton = find.byIcon(Icons.refresh);
+      expect(refreshButton, findsOneWidget);
+      await tester.tap(refreshButton);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(Game2048Page), findsOneWidget);
+      int nonZeroCount = state.game.grid.fold(
+          0,
+          (sum, row) => sum + row.where((cell) => cell != 0).length,
+        );
+      expect(nonZeroCount, 2);
+    });
+  });
+
   group('Game2048Page swipes correctly: ', () {
     testWidgets('Swipe left triggers move', (WidgetTester tester) async {
       await tester.pumpWidget(const MaterialApp(home: Game2048Page()));
