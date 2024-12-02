@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'games/game_2048_page.dart';
 import 'games/game_memory_match_page.dart';
 import 'stats/stats_main_page.dart';
+import 'package:brain_games/views/games/game_sudoku_page.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({super.key});
@@ -31,6 +32,7 @@ class MainPage extends StatelessWidget {
     children: [
       viewStatsPageButton(context),
       gameListTile(context, '2048', const Game2048Page()),
+      gameListTile(context, 'Sudoku', const GameSudokuPage()),
       gameListTile(context, 'Memory Match', const GameMemoryMatchPage()),
     ],
   );
