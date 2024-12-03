@@ -1,8 +1,20 @@
+import 'package:brain_games/games/game2048/game2048.dart';
+import 'package:brain_games/games/game2048/game2048_page.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
-import 'package:brain_games/views/games/game_2048_page.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_test/hive_test.dart';
 
 void main() {
+
+  setUp(() async {
+    await setUpTestHive();
+    await Hive.openBox('stats');
+  });
+
+  tearDown(() async {
+    await tearDownTestHive();
+  });
 
   group('Game2048Page loads: ', () {
     testWidgets('GamePage renders correctly', (WidgetTester tester) async {
@@ -24,6 +36,9 @@ void main() {
       final refreshButton = find.byIcon(Icons.refresh);
       await tester.tap(refreshButton);
       await tester.pumpAndSettle();
+      final yesButton = find.text('Yes');
+      await tester.tap(yesButton);
+      await tester.pumpAndSettle();
       timerText = (tester.widget<Text>(timerDisplay)).data!;
       expect(timerText, "Time: 00:00:00");
     });
@@ -33,7 +48,7 @@ void main() {
     testWidgets('refresh button replaces the current Game2048Page with a new one', (WidgetTester tester) async {
       await tester.pumpWidget(const MaterialApp(home: Game2048Page()));
       final state = tester.state(find.byType(Game2048Page)) as Game2048PageState;
-      state.game.grid = [
+      (state.getGame as Game2048).grid = [
         [2, 2, 0, 0],
         [0, 0, 0, 0],
         [0, 0, 0, 0],
@@ -52,9 +67,12 @@ void main() {
       expect(refreshButton, findsOneWidget);
       await tester.tap(refreshButton);
       await tester.pumpAndSettle();
+      final yesButton = find.text('Yes');
+      await tester.tap(yesButton);
+      await tester.pumpAndSettle();
 
       expect(find.byType(Game2048Page), findsOneWidget);
-      int nonZeroCount = state.game.grid.fold(
+      int nonZeroCount = (state.getGame as Game2048).grid.fold(
           0,
           (sum, row) => sum + row.where((cell) => cell != 0).length,
         );
@@ -66,7 +84,7 @@ void main() {
     testWidgets('Swipe left triggers move', (WidgetTester tester) async {
       await tester.pumpWidget(const MaterialApp(home: Game2048Page()));
       final state = tester.state(find.byType(Game2048Page)) as Game2048PageState;
-      state.game.grid = [
+      (state.getGame as Game2048).grid = [
         [2, 2, 0, 0],
         [0, 0, 0, 0],
         [0, 0, 0, 0],
@@ -81,18 +99,18 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      int nonZeroCount = state.game.grid.fold(
+      int nonZeroCount = (state.getGame as Game2048).grid.fold(
           0,
           (sum, row) => sum + row.where((cell) => cell != 0).length,
         );
-      expect(state.game.grid[0][0], 4);
+      expect((state.getGame as Game2048).grid[0][0], 4);
       expect(nonZeroCount, 2);
     });
 
     testWidgets('Swipe up triggers move', (WidgetTester tester) async {
       await tester.pumpWidget(const MaterialApp(home: Game2048Page()));
       final state = tester.state(find.byType(Game2048Page)) as Game2048PageState;
-      state.game.grid = [
+      (state.getGame as Game2048).grid = [
         [2, 0, 0, 0],
         [2, 0, 0, 0],
         [0, 0, 0, 0],
@@ -107,18 +125,18 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      int nonZeroCount = state.game.grid.fold(
+      int nonZeroCount = (state.getGame as Game2048).grid.fold(
           0,
           (sum, row) => sum + row.where((cell) => cell != 0).length,
         );
-      expect(state.game.grid[0][0], 4);
+      expect((state.getGame as Game2048).grid[0][0], 4);
       expect(nonZeroCount, 2);
     });
 
     testWidgets('Swipe right triggers move', (WidgetTester tester) async {
       await tester.pumpWidget(const MaterialApp(home: Game2048Page()));
       final state = tester.state(find.byType(Game2048Page)) as Game2048PageState;
-      state.game.grid = [
+      (state.getGame as Game2048).grid = [
         [2, 2, 0, 0],
         [0, 0, 0, 0],
         [0, 0, 0, 0],
@@ -133,18 +151,18 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      int nonZeroCount = state.game.grid.fold(
+      int nonZeroCount = (state.getGame as Game2048).grid.fold(
           0,
           (sum, row) => sum + row.where((cell) => cell != 0).length,
         );
-      expect(state.game.grid[0][3], 4);
+      expect((state.getGame as Game2048).grid[0][3], 4);
       expect(nonZeroCount, 2);
     });
 
     testWidgets('Swipe down triggers move', (WidgetTester tester) async {
       await tester.pumpWidget(const MaterialApp(home: Game2048Page()));
       final state = tester.state(find.byType(Game2048Page)) as Game2048PageState;
-      state.game.grid = [
+      (state.getGame as Game2048).grid = [
         [2, 0, 0, 0],
         [2, 0, 0, 0],
         [0, 0, 0, 0],
@@ -159,11 +177,11 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      int nonZeroCount = state.game.grid.fold(
+      int nonZeroCount = (state.getGame as Game2048).grid.fold(
           0,
           (sum, row) => sum + row.where((cell) => cell != 0).length,
         );
-      expect(state.game.grid[3][0], 4);
+      expect((state.getGame as Game2048).grid[3][0], 4);
       expect(nonZeroCount, 2);
     });
 

@@ -10,6 +10,16 @@ class Game2048 extends Game {
   int get getGridSize => _gridSize;
   int gridVal(int row, int col) => _grid[row][col];
 
+  List<List<int>> get grid => _grid;
+  set grid(List<List<int>> newGrid) {
+    if (newGrid.length == _gridSize &&
+        newGrid.every((row) => row.length == _gridSize)) {
+      _grid = newGrid;
+    } else {
+      throw ArgumentError('Grid dimensions must match gridSize ($_gridSize x $_gridSize).');
+    }
+  }
+
   Game2048() {
     _grid = List.generate(_gridSize, (_) => List.filled(_gridSize, 0));
     _addRandomTile();

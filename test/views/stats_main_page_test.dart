@@ -8,7 +8,8 @@ void main() {
       await tester.pumpWidget(const MaterialApp(home: StatsMainPage()));
       expect(find.text('Stats'), findsOneWidget);
       expect(find.text('2048'), findsOneWidget);
-      expect(find.text('Memory Match (Coming Soon)'), findsOneWidget);
+      expect(find.text('sudoku'), findsOneWidget);
+      expect(find.text('MemoryMatch'), findsOneWidget);
     });
   });
 }
