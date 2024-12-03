@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:brain_games/utils/format_time.dart';
 import 'package:flutter/material.dart';
 
-import 'package:brain_games/models/sudoku/game.dart';
+import 'package:brain_games/games/sudoku/game.dart';
 
 class GameSudokuPage extends StatefulWidget {
   const GameSudokuPage({super.key});

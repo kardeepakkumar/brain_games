@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
-import 'package:brain_games/views/stats/stats_main_page.dart';
+import 'package:brain_games/views/stats_main_page.dart';
 
 void main() {
   group('StatsMainPage loads: ', () {

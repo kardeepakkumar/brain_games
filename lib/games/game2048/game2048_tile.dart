@@ -1,5 +1,5 @@
+import 'package:brain_games/games/game2048/game2048_utils.dart';
 import 'package:flutter/material.dart';
-import '../../utils/2048/colors.dart';
 
 class Game2048Tile extends StatelessWidget {
   

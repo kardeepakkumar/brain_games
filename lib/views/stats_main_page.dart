@@ -1,6 +1,5 @@
+import 'package:brain_games/views/stats_game_page.dart';
 import 'package:flutter/material.dart';
-
-import 'package:brain_games/views/stats/game_2048_stats_page.dart';
 
 class StatsMainPage extends StatelessWidget {
   const StatsMainPage({super.key});
@@ -27,29 +26,21 @@ class StatsMainPage extends StatelessWidget {
   ListView statsMainPageBody(BuildContext context) {
     return ListView(
     children: [
-      game2048StatsTile(context),
-      gameMemoryMatchStatsTile(),
+      gameListTile(context, '2048', const StatsGamePage(gameTitle: '2048',)),
+      gameListTile(context, 'sudoku', const StatsGamePage(gameTitle: 'sudoku',)),
+      gameListTile(context, 'MemoryMatch', const StatsGamePage(gameTitle: 'MemoryMatch',)),
     ],
   );
   }
 
-  ListTile game2048StatsTile(BuildContext context) {
+  ListTile gameListTile(BuildContext context, String gameTitle, Widget page) {
     return ListTile(
-      title: const Text('2048'),
+      title: Text(gameTitle),
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const Game2048StatsPage(),
-          ),
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => page),
         );
       },
-    );
-  }
-  
-  ListTile gameMemoryMatchStatsTile() {
-    return const ListTile(
-      title: Text('Memory Match (Coming Soon)'),
     );
   }
 }

@@ -20,19 +20,23 @@ abstract class GamePageState<T extends GamePage> extends State<T> {
   Timer? _timer;
   final _statsBox = Hive.box('stats');
 
-  Game initGame();
-  String get gameTitle => _gameTitle;
-  Game get game => _game;
+  void initGame();
+  String get getGameTitle => _gameTitle;
+  Game get getGame => _game;
 
   @override
   void initState() {
     super.initState();
-    _game = initGame();
+    initGame();
     _startTimer();
   }
 
-  set gameTitle(String gameTitle) {
+  set setGameTitle(String gameTitle) {
     _gameTitle = gameTitle;
+  }
+
+  set setGame(Game game) {
+    _game = game;
   }
 
   @override
@@ -72,9 +76,34 @@ abstract class GamePageState<T extends GamePage> extends State<T> {
     return [
       IconButton(
         icon: const Icon(Icons.refresh),
-        onPressed: () => _refreshPage(context),
+        onPressed: () => _showRestartConfirmationDialog(context),
       ),
     ];
+  }
+
+  void _showRestartConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirm Restart'),
+          content: const Text('Are you sure you want to restart?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('No'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _refreshPage(context);
+              },
+              child: const Text('Yes'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Future<dynamic> _refreshPage(BuildContext context) {
@@ -111,7 +140,7 @@ abstract class GamePageState<T extends GamePage> extends State<T> {
   Widget gameBoard();
 
   bool isGameEnded() {
-    return (_game.isGameWon() || _game.isGameOver());
+    return (_game.isGameEnded());
   }
 
   void handleGameEnd() {

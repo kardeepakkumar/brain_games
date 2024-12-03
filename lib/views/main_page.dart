@@ -1,9 +1,9 @@
+import 'package:brain_games/games/game2048/game2048_page.dart';
 import 'package:flutter/material.dart';
 
-import 'games/game_2048_page.dart';
-import 'games/game_memory_match_page.dart';
-import 'stats/stats_main_page.dart';
-import 'package:brain_games/views/games/game_sudoku_page.dart';
+import '../games/memory_match/game_memory_match_page.dart';
+import 'stats_main_page.dart';
+import 'package:brain_games/games/sudoku/game_sudoku_page.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({super.key});
