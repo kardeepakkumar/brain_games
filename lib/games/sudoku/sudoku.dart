@@ -10,7 +10,7 @@ class Sudoku extends Game{
 
   Sudoku() {
     solutionGrid = _generateFullGrid();
-    puzzleGrid = _generatePuzzleGrid(2);
+    puzzleGrid = _generatePuzzleGrid(10);
     currentGrid = Grid.cloneGrid(puzzleGrid);
   }
 

@@ -15,14 +15,30 @@ class SudokuPageState extends GamePageState {
 
   late int selectedRow;
   late int selectedCol;
+  late List<List<bool>> affectedCells;
 
   @override
   void initGame() {
     setGameTitle = "sudoku";
     setGame = Sudoku();
-    selectedRow = -1;
-    selectedCol = -1;
+    _setSelectedAndAffectedCells(-1, -1);
   }
+
+  void _setSelectedAndAffectedCells(int row, int col) {
+    selectedRow = row;
+    selectedCol = col;
+    affectedCells = List.generate(9, (_) => List.generate(9, (_) => false));
+    if ((row == -1) || (col == -1)) return;
+    for (int i = 0; i < 9; i++) {
+      affectedCells[i][col] = true;
+      affectedCells[row][i] = true;
+      int subGridRowIdx = 3*(row~/3) + i~/3;
+      int subGridColIdx = 3*(col~/3) + i%3;
+      affectedCells[subGridRowIdx][subGridColIdx] = true;
+    }
+    affectedCells[row][col] = false;
+  }
+
 
   @override
   SudokuPage gameBuilder() {
@@ -85,8 +101,7 @@ Widget _buildCell(int row, int col) {
     onTap: () {
       if ((getGame as Sudoku).getPuzzleGrid[row][col] == 0) {
         setState(() {
-          selectedRow = row;
-          selectedCol = col;
+          _setSelectedAndAffectedCells(row, col);
         });
       }
     },
@@ -112,8 +127,8 @@ Widget _buildCell(int row, int col) {
         ),
         color: selectedRow == row && selectedCol == col
             ? Colors.blue.shade100
-            : (getGame as Sudoku).getPuzzleGrid[row][col] == 0
-                ? Colors.white
+            : affectedCells[row][col]
+                ? Colors.orange
                 : const Color.fromARGB(255, 244, 244, 244),
       ),
       child: Center(
@@ -168,6 +183,4 @@ Widget _buildCell(int row, int col) {
       });
     }
   }
-
-  
 }
