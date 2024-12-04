@@ -1,16 +1,17 @@
 import 'dart:math';
 
 import 'package:brain_games/core/abstract_game.dart';
+import 'package:brain_games/utils/grid.dart';
 
 class Sudoku extends Game{
-  final int _gridSize = 9;
-  final int _subGridSize = 3;
   late List<List<int>> solutionGrid;
   late List<List<int>> puzzleGrid;
+  late List<List<int>> currentGrid;
 
   Sudoku() {
     solutionGrid = _generateFullGrid();
-    puzzleGrid = _generatePuzzleGrid(1);
+    puzzleGrid = _generatePuzzleGrid(2);
+    currentGrid = Grid.cloneGrid(puzzleGrid);
   }
 
   List<List<int>> get getPuzzleGrid => puzzleGrid;
@@ -18,72 +19,58 @@ class Sudoku extends Game{
     puzzleGrid[row][col] = val;
   }
 
+  void setCurrentGridVal(int val, int row, int col) {
+    currentGrid[row][col] = val;
+  }
+
   List<List<int>> _generateFullGrid() {
-    List<List<int>> grid = List.generate(_gridSize, (_) => List.filled(_gridSize, 0));
-    _fillGrid(grid);
+    List<List<int>> grid = List.generate(9, (_) => List.filled(9, 0));
+    _fillGrid(grid, 0);
     return grid;
   }
 
   List<List<int>> _generatePuzzleGrid(int emptyCells) {
-    List<List<int>> grid = _cloneGrid(solutionGrid);
-
+    List<List<int>> grid = Grid.cloneGrid(solutionGrid);
     for (int i = 0; i < emptyCells; i++) {
       int row, col;
       do {
-        row = Random().nextInt(_gridSize);
-        col = Random().nextInt(_gridSize);
+        row = Random().nextInt(9);
+        col = Random().nextInt(9);
       } while (grid[row][col] == 0);
 
       grid[row][col] = 0;
     }
-
     return grid;
   }
 
-  List<List<int>> _cloneGrid(List<List<int>> grid) {
-    return grid.map<List<int>>((row) => List<int>.from(row)).toList();
-  }
-
-  bool _fillGrid(List<List<int>> grid) {
-    for (int row = 0; row < _gridSize; row++) {
-      for (int col = 0; col < _gridSize; col++) {
-        if (grid[row][col] == 0) {
-          List<int> numbers = List.generate(_gridSize, (index) => index + 1)..shuffle();
-
-          for (int num in numbers) {
-            if (_isValid(grid, row, col, num)) {
-              grid[row][col] = num;
-
-              if (_fillGrid(grid)) {
-                return true;
-              }
-
-              grid[row][col] = 0;
-            }
-          }
-
-          return false;
+  bool _fillGrid(List<List<int>> grid, int cur) {
+    while (cur < 81 && grid[cur~/9][cur%9] != 0) {
+      cur++;
+    }
+    if (cur == 81) return true;
+    int row = cur~/9;
+    int col = cur%9;
+    List<int> numbers = List.generate(9, (index) => index + 1)..shuffle();
+    for (int num in numbers) {
+      if (_isValidPoint(grid, row, col, num)) {
+        grid[row][col] = num;
+        if (_fillGrid(grid, cur + 1)) {
+          return true;
         }
+        grid[row][col] = 0;
       }
     }
-
-    return true;
+    return false;
   }
 
-  bool _isValid(List<List<int>> grid, int row, int col, int num) {
-    for (int i = 0; i < _gridSize; i++) {
-      if (grid[row][i] == num || grid[i][col] == num) return false;
+  bool _isValidPoint(List<List<int>> grid, int row, int col, int num) {
+    for (int i = 0; i < 9; i++) {
+        if (grid[i][col] == num) return false;
+        if (grid[row][i] == num) return false;
+        int subGridRowIdx = 3*(row~/3) + i~/3;
+        int subGridColIdx = 3*(col~/3) + i%3;
+        if (grid[subGridRowIdx][subGridColIdx] == num) return false;
     }
-
-    int startRow = row - row % _subGridSize;
-    int startCol = col - col % _subGridSize;
-
-    for (int i = 0; i < _subGridSize; i++) {
-      for (int j = 0; j < _subGridSize; j++) {
-        if (grid[startRow + i][startCol + j] == num) return false;
-      }
-    }
-
     return true;
   }
   
@@ -94,16 +81,7 @@ class Sudoku extends Game{
   
   @override
   bool isGameWon() {
-    return _areGridsEqual(puzzleGrid, solutionGrid);
-  }
-
-  bool _areGridsEqual(List<List<int>> grid1, List<List<int>> grid2) {
-    for (int i = 0; i < _gridSize; i++) {
-      for (int j = 0; j < _gridSize; j++) {
-        if (grid1[i][j] != grid2[i][j]) return false;
-      }
-    }
-    return true;
+    return Grid.areGridsEqual(currentGrid, solutionGrid);
   }
 
 }

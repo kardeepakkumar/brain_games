@@ -2,6 +2,7 @@ import 'dart:core';
 import 'dart:math';
 
 import 'package:brain_games/core/abstract_game.dart';
+import 'package:brain_games/utils/grid.dart';
 
 class Game2048 extends Game {
   final int _gridSize = 4;
@@ -47,7 +48,7 @@ class Game2048 extends Game {
   }
 
   void move(String direction) {
-    List<List<int>> oldGrid = _cloneGrid(_grid);
+    List<List<int>> oldGrid = Grid.cloneGrid(_grid);
     switch (direction) {
       case 'up':
         _moveUp();
@@ -63,13 +64,9 @@ class Game2048 extends Game {
         break;
     }
 
-    if (!_areGridsEqual(oldGrid, _grid)) {
+    if (!Grid.areGridsEqual(oldGrid, _grid)) {
       _addRandomTile();
     }
-  }
-
-  List<List<int>> _cloneGrid(List<List<int>> grid) {
-    return grid.map<List<int>>((row) => List<int>.from(row)).toList();
   }
   
   void _moveUp() {
@@ -119,16 +116,6 @@ class Game2048 extends Game {
       }
     }
     return newLine;
-  }
-
-
-  bool _areGridsEqual(List<List<int>> grid1, List<List<int>> grid2) {
-    for (int i = 0; i < _gridSize; i++) {
-      for (int j = 0; j < _gridSize; j++) {
-        if (grid1[i][j] != grid2[i][j]) return false;
-      }
-    }
-    return true;
   }
 
   @override

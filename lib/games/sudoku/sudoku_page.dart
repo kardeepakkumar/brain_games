@@ -13,10 +13,15 @@ class SudokuPage extends GamePage {
 
 class SudokuPageState extends GamePageState {
 
+  late int selectedRow;
+  late int selectedCol;
+
   @override
   void initGame() {
     setGameTitle = "sudoku";
     setGame = Sudoku();
+    selectedRow = -1;
+    selectedCol = -1;
   }
 
   @override
@@ -42,7 +47,7 @@ class SudokuPageState extends GamePageState {
     return Flexible(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(children: [_sudokuGridDisplay()],),
+        child: Column(children: [_sudokuGridDisplay(), _sudokuKeypadDisplay()],),
       ),
     );
   }
@@ -53,15 +58,15 @@ class SudokuPageState extends GamePageState {
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 9,
           childAspectRatio: 1.0,
-          mainAxisSpacing: 1.0,
-          crossAxisSpacing: 1.0,
+          mainAxisSpacing: 0,
+          crossAxisSpacing: 0,
         ),
         itemCount: 81,
         itemBuilder: (context, index) {
           int row = index ~/ 9;
           int col = index % 9;
-          double mainSpacing = (row % 3 == 2) ? 4.0 : 1.0;
-          double crossSpacing = (col % 3 == 2) ? 4.0 : 1.0;
+          double mainSpacing = (row % 3 == 2) ? 0 : 0;
+          double crossSpacing = (col % 3 == 2) ? 0 : 0;
 
           return Container(
             margin: EdgeInsets.only(
@@ -75,42 +80,94 @@ class SudokuPageState extends GamePageState {
     );
   }
 
-  Widget _buildCell(int row, int col) {
-    return Container(
+Widget _buildCell(int row, int col) {
+  return GestureDetector(
+    onTap: () {
+      if ((getGame as Sudoku).getPuzzleGrid[row][col] == 0) {
+        setState(() {
+          selectedRow = row;
+          selectedCol = col;
+        });
+      }
+    },
+    child: Container(
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.black),
-        color: (getGame as Sudoku).getPuzzleGrid[row][col] == 0 ? Colors.white : Colors.grey.shade300,
+        border: Border(
+          top: BorderSide(
+            color: Colors.black,
+            width: row % 3 == 0 ? 2.0 : 1.0,
+          ),
+          bottom: BorderSide(
+            color: Colors.black,
+            width: row % 3 == 2 ? 2.0 : 1.0,
+          ),
+          left: BorderSide(
+            color: Colors.black,
+            width: col % 3 == 0 ? 2.0 : 1.0,
+          ),
+          right: BorderSide(
+            color: Colors.black,
+            width: col % 3 == 2 ? 2.0 : 1.0,
+          ),
+        ),
+        color: selectedRow == row && selectedCol == col
+            ? Colors.blue.shade100
+            : (getGame as Sudoku).getPuzzleGrid[row][col] == 0
+                ? Colors.white
+                : const Color.fromARGB(255, 244, 244, 244),
       ),
-      child: (getGame as Sudoku).getPuzzleGrid[row][col] == 0
-          ? TextField(
-              textAlign: TextAlign.center,
-              keyboardType: TextInputType.number,
-              maxLength: 1,
-              decoration: const InputDecoration(
-                counterText: '',
-                border: InputBorder.none,
-              ),
-              onChanged: (value) => _onCellChanged(row, col, value),
-            )
-          : Center(
-              child: Text(
-                (getGame as Sudoku).getPuzzleGrid[row][col].toString(),
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      child: Center(
+        child: Text(
+          (getGame as Sudoku).currentGrid[row][col] == 0
+              ? ''
+              : (getGame as Sudoku).currentGrid[row][col].toString(),
+          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+        ),
+      ),
+    ),
+  );
+}
+
+  Widget _sudokuKeypadDisplay() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Wrap(
+          spacing: 6.0,
+          runSpacing: 6.0,
+          alignment: WrapAlignment.center,
+          children: [
+            ...List.generate(
+              9,
+              (index) => ElevatedButton(
+                onPressed: () {
+                  _onInputClick(index + 1);
+                },
+                child: Text('${index + 1}', style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
               ),
             ),
+            ElevatedButton(
+              onPressed: () {
+                _onInputClick(0);
+              },
+              child: const Icon(Icons.backspace),
+            ),
+          ],
+        ),
+      ],
     );
   }
-  
-  void _onCellChanged(int row, int col, String value) {
-    int? input = int.tryParse(value);
-    if (input != null && input > 0 && input <= 9) {
+
+  void _onInputClick(int value) {
+    if (selectedCol != -1 && selectedRow != -1 && !isGameEnded()) {
       setState(() {
-        (getGame as Sudoku).setPuzzleGridVal(input, row, col);
+        (getGame as Sudoku).setCurrentGridVal(value, selectedRow, selectedCol);
         if (isGameEnded()) {
           handleGameEnd();
         }
       });
     }
   }
+
   
 }
