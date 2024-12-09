@@ -7,10 +7,17 @@ class Sudoku extends Game{
   late List<List<int>> solutionGrid;
   late List<List<int>> puzzleGrid;
   late List<List<int>> currentGrid;
+  late String level;
 
-  Sudoku() {
+  Sudoku(String level) {
     solutionGrid = _generateFullGrid();
-    puzzleGrid = _generatePuzzleGrid(10);
+    if (level == "Easy") {
+      puzzleGrid = _generatePuzzleGrid(10);
+    } else if (level == "Medium") {
+      puzzleGrid = _generatePuzzleGrid(20);
+    } else if (level == "Hard") {
+      puzzleGrid = _generatePuzzleGrid(30);
+    }
     currentGrid = Grid.cloneGrid(puzzleGrid);
   }
 

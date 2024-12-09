@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:brain_games/games/sudoku/sudoku.dart';
 
 class SudokuPage extends GamePage {
-  const SudokuPage({super.key});
+  final String level;
+
+  const SudokuPage({super.key, required this.level});
 
   @override
   SudokuPageState createState() => SudokuPageState();
@@ -12,7 +14,7 @@ class SudokuPage extends GamePage {
 }
 
 class SudokuPageState extends GamePageState {
-
+  late final String level;
   late int selectedRow;
   late int selectedCol;
   late List<List<bool>> affectedCells;
@@ -20,7 +22,7 @@ class SudokuPageState extends GamePageState {
   @override
   void initGame() {
     setGameTitle = "sudoku";
-    setGame = Sudoku();
+    setGame = Sudoku((widget as SudokuPage).level);
     _setSelectedAndAffectedCells(-1, -1);
   }
 
@@ -42,7 +44,7 @@ class SudokuPageState extends GamePageState {
 
   @override
   SudokuPage gameBuilder() {
-    return const SudokuPage();
+    return SudokuPage(level: (widget as SudokuPage).level);
   }
 
   @override
