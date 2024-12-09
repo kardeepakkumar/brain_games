@@ -24,6 +24,7 @@ class SudokuMainPageState extends GameMainPageState{
       gameListTile(context, 'Easy', const SudokuPage(level: 'Easy')),
       gameListTile(context, 'Medium', const SudokuPage(level: 'Medium')),
       gameListTile(context, 'Hard', const SudokuPage(level: 'Hard')),
+      gameListTile(context, 'Ultra', const SudokuPage(level: 'Ultra')),
     ],
   );
   }
